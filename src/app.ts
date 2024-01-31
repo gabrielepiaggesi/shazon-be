@@ -1,7 +1,7 @@
 import express from 'express';
 import { scrapeAmazonOffersList } from './amazon-scraper';
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 8000;
 
 // scrapeAmazonOffersList(180);
 

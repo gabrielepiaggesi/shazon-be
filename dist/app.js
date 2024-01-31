@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const amazon_scraper_1 = require("./amazon-scraper");
 const app = (0, express_1.default)();
-const port = 3000;
+const port = process.env.PORT || 8000;
 // scrapeAmazonOffersList(180);
 app.get('/', (req, res) => {
     res.send('Hello World!');
