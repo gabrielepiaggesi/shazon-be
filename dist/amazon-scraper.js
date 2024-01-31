@@ -14,20 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrapeAmazonOffersList = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
-// const browser = puppeteer.launch({ 
-//     args: [
-//     '--no-sandbox',
-//     '--disable-setuid-sandbox',
-// ]});
+let browser;
 function scrapeAmazonOffersList(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         // Launch the browser and open a new blank page
-        const browser = yield puppeteer_1.default.launch({
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-            ]
-        });
+        if (!browser) {
+            browser = yield puppeteer_1.default.launch({
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                ]
+            });
+        }
         const page = yield browser.newPage();
         yield page.setViewport({ width: 1512, height: 949 });
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
@@ -53,10 +51,9 @@ function scrapeAmazonOffersList(viewIndex) {
             }
             return result;
         });
-        browser.close();
-        browser.disconnect();
-        console.log(arr);
-        console.log(arr.length);
+        yield page.close();
+        // await browser.close();
+        // await browser.disconnect();
         return arr;
     });
 }

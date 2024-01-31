@@ -1,18 +1,17 @@
 import puppeteer, { ElementHandle } from 'puppeteer';
 
-// const browser = puppeteer.launch({ 
-//     args: [
-//     '--no-sandbox',
-//     '--disable-setuid-sandbox',
-// ]});
+let browser;
 
 export async function scrapeAmazonOffersList(viewIndex: number) {
     // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch({ 
-        args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-      ]});
+
+    if (!browser) {
+        browser = await puppeteer.launch({ 
+            args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+        ]});
+    }
     const page = await browser.newPage();
 
     await page.setViewport({width: 1512, height: 949});
@@ -47,10 +46,9 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
         return result;
     });
 
-    browser.close();
-    browser.disconnect();
-    console.log(arr);
-    console.log(arr.length);
+    await page.close();
+    // await browser.close();
+    // await browser.disconnect();
     return arr;
 }
 
