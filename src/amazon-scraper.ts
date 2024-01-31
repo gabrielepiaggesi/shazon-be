@@ -77,7 +77,7 @@ export async function scrapeAmazonProducts(viewIndex: number) {
 
     await page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" }); 
     // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
-    await page.waitForSelector('span[data-component-type="s-result-info-bar"]');
+    await page.waitForSelector('div[data-asin]:not([data-asin=""])');
 
     await autoScroll(page);
     const arr = await page.evaluate(() => {
