@@ -18,8 +18,6 @@ function scrapeAmazonOffersList(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         // Launch the browser and open a new blank page
         const browser = yield puppeteer_1.default.launch({
-            headless: true,
-            executablePath: '/usr/bin/chromium-browser',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
