@@ -14,6 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrapeAmazonOffersList = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
+// const browser = puppeteer.launch({ 
+//     args: [
+//     '--no-sandbox',
+//     '--disable-setuid-sandbox',
+// ]});
 function scrapeAmazonOffersList(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         // Launch the browser and open a new blank page
@@ -48,6 +53,8 @@ function scrapeAmazonOffersList(viewIndex) {
             }
             return result;
         });
+        browser.close();
+        browser.disconnect();
         console.log(arr);
         console.log(arr.length);
         return arr;

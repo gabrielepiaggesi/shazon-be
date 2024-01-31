@@ -1,5 +1,11 @@
 import puppeteer, { ElementHandle } from 'puppeteer';
 
+// const browser = puppeteer.launch({ 
+//     args: [
+//     '--no-sandbox',
+//     '--disable-setuid-sandbox',
+// ]});
+
 export async function scrapeAmazonOffersList(viewIndex: number) {
     // Launch the browser and open a new blank page
     const browser = await puppeteer.launch({ 
@@ -41,6 +47,8 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
         return result;
     });
 
+    browser.close();
+    browser.disconnect();
     console.log(arr);
     console.log(arr.length);
     return arr;
