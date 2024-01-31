@@ -72,11 +72,15 @@ export async function scrapeAmazonProducts(viewIndex: number) {
     }
     console.log('Browser', Browser);
     const page = await Browser.newPage();
+    console.log('page', page);
     await page.setViewport({width: 1512, height: 949});
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
 
     await page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" }); 
     // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
+    console.log('page', page);
+    await page.waitForSelector('#nav-subnav');
+    await page.waitForSelector('#search');
     await page.waitForSelector('div[data-asin]:not([data-asin=""])');
 
     await autoScroll(page);

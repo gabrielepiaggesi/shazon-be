@@ -80,10 +80,14 @@ function scrapeAmazonProducts(viewIndex) {
         }
         console.log('Browser', Browser);
         const page = yield Browser.newPage();
+        console.log('page', page);
         yield page.setViewport({ width: 1512, height: 949 });
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         yield page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" });
         // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
+        console.log('page', page);
+        yield page.waitForSelector('#nav-subnav');
+        yield page.waitForSelector('#search');
         yield page.waitForSelector('div[data-asin]:not([data-asin=""])');
         yield autoScroll(page);
         const arr = yield page.evaluate(() => {
