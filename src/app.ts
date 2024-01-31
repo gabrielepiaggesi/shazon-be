@@ -3,7 +3,7 @@ import { scrapeAmazonOffersList } from './amazon-scraper';
 const app = express();
 const port = 3000;
 
-scrapeAmazonOffersList(180);
+// scrapeAmazonOffersList(180);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
