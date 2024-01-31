@@ -6,15 +6,21 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
     // Launch the browser and open a new blank page
 
     if (!browser) {
-        browser = await puppeteer.launch({ 
+        browser = await puppeteer.launch({
             args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-        ]});
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                `--window-size=1512,949`
+            ],
+            defaultViewport: {
+                width: 1512,
+                height: 949
+            }
+        });
     }
     const page = await browser.newPage();
 
-    await page.setViewport({width: 1512, height: 949});
+    // await page.setViewport({width: 1512, height: 949});
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
 
     const params = JSON.stringify({"version":1,"viewIndex":180,"presetId":"deals-collection-all-deals","sorting":"FEATURED","priceRange":{"from":20,"to":50},"dealState":"AVAILABLE"});
@@ -46,7 +52,7 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
         return result;
     });
 
-    await page.close();
+    page.close();
     // await browser.close();
     // await browser.disconnect();
     return arr;

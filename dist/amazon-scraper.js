@@ -23,11 +23,16 @@ function scrapeAmazonOffersList(viewIndex) {
                 args: [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
-                ]
+                    `--window-size=1512,949`
+                ],
+                defaultViewport: {
+                    width: 1512,
+                    height: 949
+                }
             });
         }
         const page = yield browser.newPage();
-        yield page.setViewport({ width: 1512, height: 949 });
+        // await page.setViewport({width: 1512, height: 949});
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         const params = JSON.stringify({ "version": 1, "viewIndex": 180, "presetId": "deals-collection-all-deals", "sorting": "FEATURED", "priceRange": { "from": 20, "to": 50 }, "dealState": "AVAILABLE" });
         const amazonOffersPage = yield page.goto('https://www.amazon.it/deals?deals-widget=' + encodeURIComponent(params), { waitUntil: "domcontentloaded" });
@@ -51,7 +56,7 @@ function scrapeAmazonOffersList(viewIndex) {
             }
             return result;
         });
-        yield page.close();
+        page.close();
         // await browser.close();
         // await browser.disconnect();
         return arr;
