@@ -2,10 +2,12 @@ import puppeteer, { ElementHandle } from 'puppeteer';
 
 export async function scrapeAmazonOffersList(viewIndex: number) {
     // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch({ headless: false, args: [
+    const browser = await puppeteer.launch({ 
+        headless: true, 
+        args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-      ] });
+      ]});
     const page = await browser.newPage();
 
     await page.setViewport({width: 1512, height: 949});
