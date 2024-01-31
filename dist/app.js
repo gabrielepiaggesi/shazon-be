@@ -30,20 +30,18 @@ app.use(body_parser_1.default.urlencoded({ limit: 52428800, extended: true, para
 exports.Browser = null;
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!exports.Browser) {
-            exports.Browser = yield puppeteer_1.default.launch({
-                headless: !(port === 8000),
-                args: port === 8000 ? [] : [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    `--window-size=1512,949`
-                ],
-                defaultViewport: {
-                    width: 1512,
-                    height: 949
-                }
-            });
-        }
+        exports.Browser = yield puppeteer_1.default.launch({
+            headless: !(port === 8000),
+            args: port === 8000 ? [] : [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                `--window-size=1512,949`
+            ],
+            defaultViewport: {
+                width: 1512,
+                height: 949
+            }
+        });
     });
 }
 start();

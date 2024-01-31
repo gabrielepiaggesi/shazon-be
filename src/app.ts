@@ -18,23 +18,22 @@ app.use(bodyParser.urlencoded({limit: 52428800, extended: true, parameterLimit: 
 export let Browser: any = null;
 
 async function start() {
-  if (!Browser) {
-    Browser = await puppeteer.launch({
-        headless: !(port === 8000),
-        args: port === 8000 ? [] : [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            `--window-size=1512,949`
-        ],
-        defaultViewport: {
-            width: 1512,
-            height: 949
-        }
-    });
-  }
+  Browser = await puppeteer.launch({
+    headless: !(port === 8000),
+    args: port === 8000 ? [] : [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        `--window-size=1512,949`
+    ],
+    defaultViewport: {
+        width: 1512,
+        height: 949
+    }
+});
 }
 
 start();
+
 port === 8000 && setTimeout(() => {
   scrapeAmazonProducts(0);
 }, 2000);
