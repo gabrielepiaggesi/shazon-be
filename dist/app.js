@@ -13,10 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 const amazon_scraper_1 = require("./amazon-scraper");
+process.env.TZ = 'Europe/Rome';
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ', err);
+});
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8000;
-// scrapeAmazonOffersList(180);
+app.use((0, cors_1.default)());
+app.use(body_parser_1.default.json({ limit: 52428800 }));
+app.use(body_parser_1.default.urlencoded({ limit: 52428800, extended: true, parameterLimit: 50000 }));
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
