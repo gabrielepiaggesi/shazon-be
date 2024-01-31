@@ -100,9 +100,12 @@ export async function scrapeAmazonProducts(viewIndex: number) {
             const stars = productElement.getElementsByClassName('a-icon-alt')[0]?.textContent;
 
             const priceDiv = productElement.querySelector('div[data-cy="price-recipe"]');
-            const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
-            const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
-            const price = priceSpan2?.textContent;
+            const priceWhole = priceDiv?.getElementsByClassName('a-price-whole')[0]?.textContent;
+            const priceFraction = priceDiv?.getElementsByClassName('a-price-fraction')[0]?.textContent;
+            const price = `${priceWhole}${priceFraction} €`;
+            // const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
+            // const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
+            // const price = priceSpan2?.textContent;
             
             const imgElem = productElement.querySelector('img');
             const img = imgElem?.getAttribute('src').replace(/AC_UL[1-9]/gm, `AC_UL960_FMwebp_QL65`);
@@ -114,7 +117,7 @@ export async function scrapeAmazonProducts(viewIndex: number) {
     });
 
     page.close();
-    console.log(arr.length);
+    console.log(arr);
     return arr;
 }
 

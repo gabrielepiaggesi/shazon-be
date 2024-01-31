@@ -25,9 +25,9 @@ const port = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json({ limit: 52428800 }));
 app.use(body_parser_1.default.urlencoded({ limit: 52428800, extended: true, parameterLimit: 50000 }));
-// port === 8000 && setTimeout(() => {
-//   scrapeAmazonProducts(0);
-// }, 2000);
+port === 8000 && setTimeout(() => {
+    (0, amazon_scraper_1.scrapeAmazonProducts)(0);
+}, 2000);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });

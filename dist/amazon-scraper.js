@@ -91,7 +91,7 @@ function scrapeAmazonProducts(viewIndex) {
         yield page.waitForSelector('div[data-asin]:not([data-asin=""])');
         yield autoScroll(page);
         const arr = yield page.evaluate(() => {
-            var _a;
+            var _a, _b, _c;
             let result = [];
             const divs = Array.from(document.querySelectorAll('div[data-asin]:not([data-asin=""])'));
             for (let i = 0; i < divs.length; i++) {
@@ -103,9 +103,12 @@ function scrapeAmazonProducts(viewIndex) {
                 const url = 'https://amazon.it/dp/' + asin;
                 const stars = (_a = productElement.getElementsByClassName('a-icon-alt')[0]) === null || _a === void 0 ? void 0 : _a.textContent;
                 const priceDiv = productElement.querySelector('div[data-cy="price-recipe"]');
-                const priceSpan1 = priceDiv === null || priceDiv === void 0 ? void 0 : priceDiv.getElementsByClassName('a-price')[0];
-                const priceSpan2 = priceSpan1 === null || priceSpan1 === void 0 ? void 0 : priceSpan1.getElementsByClassName('a-offscreen')[0];
-                const price = priceSpan2 === null || priceSpan2 === void 0 ? void 0 : priceSpan2.textContent;
+                const priceWhole = (_b = priceDiv === null || priceDiv === void 0 ? void 0 : priceDiv.getElementsByClassName('a-price-whole')[0]) === null || _b === void 0 ? void 0 : _b.textContent;
+                const priceFraction = (_c = priceDiv === null || priceDiv === void 0 ? void 0 : priceDiv.getElementsByClassName('a-price-fraction')[0]) === null || _c === void 0 ? void 0 : _c.textContent;
+                const price = `${priceWhole}${priceFraction} €`;
+                // const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
+                // const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
+                // const price = priceSpan2?.textContent;
                 const imgElem = productElement.querySelector('img');
                 const img = imgElem === null || imgElem === void 0 ? void 0 : imgElem.getAttribute('src').replace(/AC_UL[1-9]/gm, `AC_UL960_FMwebp_QL65`);
                 const product = { idx: i, img, url, name, stars, price, asin };
@@ -114,7 +117,7 @@ function scrapeAmazonProducts(viewIndex) {
             return result;
         });
         page.close();
-        console.log(arr.length);
+        console.log(arr);
         return arr;
     });
 }
