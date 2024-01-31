@@ -104,7 +104,7 @@ function scrapeAmazonProducts(viewIndex) {
                 const stars = (_a = productElement.getElementsByClassName('a-icon-alt')[0]) === null || _a === void 0 ? void 0 : _a.textContent;
                 const priceDiv = productElement.querySelector('div[data-cy="price-recipe"]');
                 const priceSpan1 = priceDiv === null || priceDiv === void 0 ? void 0 : priceDiv.getElementsByClassName('a-price')[0];
-                const priceSpan2 = priceSpan1 === null || priceSpan1 === void 0 ? void 0 : priceSpan1.querySelector('span');
+                const priceSpan2 = priceSpan1 === null || priceSpan1 === void 0 ? void 0 : priceSpan1.getElementsByClassName('a-offscreen')[0];
                 const price = priceSpan2 === null || priceSpan2 === void 0 ? void 0 : priceSpan2.textContent;
                 const imgElem = productElement.querySelector('img');
                 const img = imgElem === null || imgElem === void 0 ? void 0 : imgElem.getAttribute('src').replace(/AC_UL[1-9]/gm, `AC_UL960_FMwebp_QL65`);

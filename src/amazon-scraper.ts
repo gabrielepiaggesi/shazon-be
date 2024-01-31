@@ -101,7 +101,7 @@ export async function scrapeAmazonProducts(viewIndex: number) {
 
             const priceDiv = productElement.querySelector('div[data-cy="price-recipe"]');
             const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
-            const priceSpan2 = priceSpan1?.querySelector('span');
+            const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
             const price = priceSpan2?.textContent;
             
             const imgElem = productElement.querySelector('img');
