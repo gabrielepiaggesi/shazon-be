@@ -25,11 +25,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/offers', async (req, res) => {
-  res.send(await scrapeAmazonOffersList(0)).json();
+  res.json(await scrapeAmazonOffersList(0));
 });
 
 app.get('/products', async (req, res) => {
-  res.send(await scrapeAmazonProducts(0)).json();
+  res.json(await scrapeAmazonProducts(0));
 });
 
 app.listen(port, () => {

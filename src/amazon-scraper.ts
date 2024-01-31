@@ -70,12 +70,12 @@ export async function scrapeAmazonProducts(viewIndex: number) {
             }
         });
     }
-    
+    console.log('Browser', Browser);
     const page = await Browser.newPage();
-    // await page.setViewport({width: 1512, height: 949});
+    await page.setViewport({width: 1512, height: 949});
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
 
-    await page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ds=v1%3A3cK09y3spv0BCJPAwwAc4OZSrC9n%2Bk3D%2B7uoxKTwAmg&qid=1706730370&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" }); 
+    await page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" }); 
     // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
     await page.waitForSelector('span[data-component-type="s-result-info-bar"]');
 

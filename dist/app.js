@@ -32,10 +32,10 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 app.get('/offers', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send(yield (0, amazon_scraper_1.scrapeAmazonOffersList)(0)).json();
+    res.json(yield (0, amazon_scraper_1.scrapeAmazonOffersList)(0));
 }));
 app.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send(yield (0, amazon_scraper_1.scrapeAmazonProducts)(0)).json();
+    res.json(yield (0, amazon_scraper_1.scrapeAmazonProducts)(0));
 }));
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
