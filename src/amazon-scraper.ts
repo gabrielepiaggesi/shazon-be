@@ -39,6 +39,7 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
 
     console.log(arr);
     console.log(arr.length);
+    return arr;
 }
 
 async function getProductData(productElement: any) {

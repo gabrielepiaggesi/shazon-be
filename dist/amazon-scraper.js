@@ -45,6 +45,7 @@ function scrapeAmazonOffersList(viewIndex) {
         });
         console.log(arr);
         console.log(arr.length);
+        return arr;
     });
 }
 exports.scrapeAmazonOffersList = scrapeAmazonOffersList;
