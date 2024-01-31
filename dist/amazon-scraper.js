@@ -8,12 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrapeAmazonProducts = exports.scrapeAmazonOffersList = void 0;
-const app_1 = require("./app");
+const puppeteer_1 = __importDefault(require("puppeteer"));
+let Browser;
+const port = process.env.PORT || 8000;
 function scrapeAmazonOffersList(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        const page = yield app_1.Browser.newPage();
+        if (!Browser) {
+            Browser = yield puppeteer_1.default.launch({
+                headless: !(port === 8000),
+                args: port === 8000 ? [] : [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    `--window-size=1512,949`
+                ],
+                defaultViewport: {
+                    width: 1512,
+                    height: 949
+                }
+            });
+        }
+        const page = yield Browser.newPage();
         // await page.setViewport({width: 1512, height: 949});
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         const params = JSON.stringify({ "version": 1, "viewIndex": 180, "presetId": "deals-collection-all-deals", "sorting": "FEATURED", "priceRange": { "from": 20, "to": 50 }, "dealState": "AVAILABLE" });
@@ -45,8 +64,21 @@ function scrapeAmazonOffersList(viewIndex) {
 exports.scrapeAmazonOffersList = scrapeAmazonOffersList;
 function scrapeAmazonProducts(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('scrapeAmazonProducts');
-        const page = yield app_1.Browser.newPage();
+        if (!Browser) {
+            Browser = yield puppeteer_1.default.launch({
+                headless: !(port === 8000),
+                args: port === 8000 ? [] : [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    `--window-size=1512,949`
+                ],
+                defaultViewport: {
+                    width: 1512,
+                    height: 949
+                }
+            });
+        }
+        const page = yield Browser.newPage();
         // await page.setViewport({width: 1512, height: 949});
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         yield page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ds=v1%3A3cK09y3spv0BCJPAwwAc4OZSrC9n%2Bk3D%2B7uoxKTwAmg&qid=1706730370&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" });

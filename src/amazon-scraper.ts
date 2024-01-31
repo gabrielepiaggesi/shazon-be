@@ -1,8 +1,23 @@
 import puppeteer from 'puppeteer';
-import { Browser } from './app';
 
+let Browser;
+const port = process.env.PORT || 8000;
 
 export async function scrapeAmazonOffersList(viewIndex: number) {
+    if (!Browser) {
+        Browser = await puppeteer.launch({
+            headless: !(port === 8000),
+            args: port === 8000 ? [] : [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                `--window-size=1512,949`
+            ],
+            defaultViewport: {
+                width: 1512,
+                height: 949
+            }
+        });
+    }
     const page = await Browser.newPage();
     // await page.setViewport({width: 1512, height: 949});
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
@@ -41,7 +56,20 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
 
 
 export async function scrapeAmazonProducts(viewIndex: number) {
-    console.log('scrapeAmazonProducts');
+    if (!Browser) {
+        Browser = await puppeteer.launch({
+            headless: !(port === 8000),
+            args: port === 8000 ? [] : [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                `--window-size=1512,949`
+            ],
+            defaultViewport: {
+                width: 1512,
+                height: 949
+            }
+        });
+    }
     
     const page = await Browser.newPage();
     // await page.setViewport({width: 1512, height: 949});

@@ -15,28 +15,10 @@ app.use(cors());
 app.use(bodyParser.json({limit: 52428800}));
 app.use(bodyParser.urlencoded({limit: 52428800, extended: true, parameterLimit: 50000}));
 
-export let Browser: any = null;
 
-async function start() {
-  Browser = await puppeteer.launch({
-    headless: !(port === 8000),
-    args: port === 8000 ? [] : [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        `--window-size=1512,949`
-    ],
-    defaultViewport: {
-        width: 1512,
-        height: 949
-    }
-});
-}
-
-start();
-
-port === 8000 && setTimeout(() => {
-  scrapeAmazonProducts(0);
-}, 2000);
+// port === 8000 && setTimeout(() => {
+//   scrapeAmazonProducts(0);
+// }, 2000);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
