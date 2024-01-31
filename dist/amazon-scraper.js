@@ -77,7 +77,7 @@ function scrapeAmazonProducts(viewIndex) {
             return result;
         });
         page.close();
-        // console.log(arr);
+        console.log(arr.length);
         return arr;
     });
 }

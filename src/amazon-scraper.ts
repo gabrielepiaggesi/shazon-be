@@ -82,7 +82,7 @@ export async function scrapeAmazonProducts(viewIndex: number) {
     });
 
     page.close();
-    // console.log(arr);
+    console.log(arr.length);
     return arr;
 }
 
