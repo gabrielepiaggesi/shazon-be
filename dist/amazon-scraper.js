@@ -17,7 +17,10 @@ const puppeteer_1 = __importDefault(require("puppeteer"));
 function scrapeAmazonOffersList(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         // Launch the browser and open a new blank page
-        const browser = yield puppeteer_1.default.launch({ headless: false, });
+        const browser = yield puppeteer_1.default.launch({ headless: false, args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+            ] });
         const page = yield browser.newPage();
         yield page.setViewport({ width: 1512, height: 949 });
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
