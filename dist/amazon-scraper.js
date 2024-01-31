@@ -102,10 +102,10 @@ function scrapeAmazonProducts(viewIndex) {
                 const asin = productElement.getAttribute('data-asin');
                 const url = 'https://amazon.it/dp/' + asin;
                 const stars = (_a = productElement.getElementsByClassName('a-icon-alt')[0]) === null || _a === void 0 ? void 0 : _a.textContent;
-                const priceDiv = productElement.querySelector('div[data-cy="price-recipe"]');
+                const priceDiv = productElement.querySelector('div[data-cy="price-recipe"] > div > div > a > span');
                 const priceWhole = (_b = priceDiv === null || priceDiv === void 0 ? void 0 : priceDiv.getElementsByClassName('a-price-whole')[0]) === null || _b === void 0 ? void 0 : _b.textContent;
                 const priceFraction = (_c = priceDiv === null || priceDiv === void 0 ? void 0 : priceDiv.getElementsByClassName('a-price-fraction')[0]) === null || _c === void 0 ? void 0 : _c.textContent;
-                const price = `${priceWhole}${priceFraction} €`;
+                const price = priceWhole ? `${priceWhole}${priceFraction} €` : null;
                 // const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
                 // const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
                 // const price = priceSpan2?.textContent;
@@ -117,7 +117,7 @@ function scrapeAmazonProducts(viewIndex) {
             return result;
         });
         page.close();
-        console.log(arr);
+        // console.log(arr);
         return arr;
     });
 }

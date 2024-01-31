@@ -99,10 +99,10 @@ export async function scrapeAmazonProducts(viewIndex: number) {
             const url = 'https://amazon.it/dp/' + asin;
             const stars = productElement.getElementsByClassName('a-icon-alt')[0]?.textContent;
 
-            const priceDiv = productElement.querySelector('div[data-cy="price-recipe"]');
+            const priceDiv = productElement.querySelector('div[data-cy="price-recipe"] > div > div > a > span');
             const priceWhole = priceDiv?.getElementsByClassName('a-price-whole')[0]?.textContent;
             const priceFraction = priceDiv?.getElementsByClassName('a-price-fraction')[0]?.textContent;
-            const price = `${priceWhole}${priceFraction} €`;
+            const price = priceWhole ? `${priceWhole}${priceFraction} €` : null;
             // const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
             // const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
             // const price = priceSpan2?.textContent;
@@ -117,7 +117,7 @@ export async function scrapeAmazonProducts(viewIndex: number) {
     });
 
     page.close();
-    console.log(arr);
+    // console.log(arr);
     return arr;
 }
 
