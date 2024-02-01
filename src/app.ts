@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { initJobs } from './cron-jobs';
 import { getOffers, getProducts } from './feed';
+import { scrapeAmazonProducts } from './amazon-scraper';
 process.env.TZ = 'Europe/Rome';
 
 process.on('uncaughtException', function (err) {
@@ -17,9 +18,9 @@ app.use(bodyParser.urlencoded({limit: 52428800, extended: true, parameterLimit: 
 initJobs(app);
 
 
-// port === 8000 && setTimeout(() => {
-//   scrapeAmazonProducts(0);
-// }, 2000);
+port === 8000 && setTimeout(() => {
+  scrapeAmazonProducts(1);
+}, 2000);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
