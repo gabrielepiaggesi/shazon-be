@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-const cron_1 = require("./cron");
+const cron_jobs_1 = require("./cron-jobs");
 const feed_1 = require("./feed");
 process.env.TZ = 'Europe/Rome';
 process.on('uncaughtException', function (err) {
@@ -26,7 +26,7 @@ const port = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json({ limit: 52428800 }));
 app.use(body_parser_1.default.urlencoded({ limit: 52428800, extended: true, parameterLimit: 50000 }));
-(0, cron_1.initJobs)(app);
+(0, cron_jobs_1.initJobs)(app);
 // port === 8000 && setTimeout(() => {
 //   scrapeAmazonProducts(0);
 // }, 2000);

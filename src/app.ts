@@ -1,8 +1,7 @@
 import express from 'express';
 import bodyParser from "body-parser";
 import cors from "cors";
-import { scrapeAmazonOffersList, scrapeAmazonProducts } from './amazon-scraper';
-import { initJobs } from './cron';
+import { initJobs } from './cron-jobs';
 import { getOffers, getProducts } from './feed';
 process.env.TZ = 'Europe/Rome';
 
