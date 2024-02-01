@@ -40,41 +40,49 @@ const CronJob = Cron.CronJob;
 const initJobs = (app) => {
     const productsJob = new CronJob('*/10 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
-            for (let i = 0; i <= 30; i++) {
-                yield setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                    const page = i;
+            let page = 0;
+            let intervalId = setInterval(function () {
+                return __awaiter(this, void 0, void 0, function* () {
                     try {
                         const newProducts = yield (0, amazon_scraper_1.scrapeAmazonProducts)(page);
                         (0, feed_1.updateProducts)(page, newProducts);
                         console.log('Success scraping products', page);
+                        page++;
+                        if (page >= 30)
+                            clearInterval(intervalId);
                     }
                     catch (e) {
                         console.log(e);
                         console.log('Impossibile scraping products', page);
-                        i--;
                     }
-                }), 5000);
-            }
+                });
+            }, 10000);
+            if (page >= 30)
+                clearInterval(intervalId);
         });
     }, null, true, 'Europe/Rome');
     productsJob.start();
     const offersJob = new CronJob('*/10 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
-            for (let i = 0; i <= 30; i++) {
-                yield setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                    const page = i;
+            let page = 0;
+            let intervalId = setInterval(function () {
+                return __awaiter(this, void 0, void 0, function* () {
                     try {
                         const newOffers = yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page);
                         (0, feed_1.updateOffers)(page, newOffers);
                         console.log('Success scraping offers', page);
+                        page++;
+                        if (page >= 30)
+                            clearInterval(intervalId);
                     }
                     catch (e) {
                         console.log(e);
                         console.log('Impossibile scraping offers', page);
-                        i--;
                     }
-                }), 5000);
-            }
+                });
+            }, 10000);
+            if (page >= 30)
+                clearInterval(intervalId);
         });
     }, null, true, 'Europe/Rome');
     offersJob.start();
