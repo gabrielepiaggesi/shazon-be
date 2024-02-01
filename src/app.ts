@@ -26,11 +26,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/offers/:page', async (req, res) => {
+app.get('/offers/:page?', async (req, res) => {
   res.json(await getOffers(+req.params.page || 0));
 });
 
-app.get('/products/:page', async (req, res) => {
+app.get('/products/:page?', async (req, res) => {
   res.json(await getProducts(+req.params.page || 0));
 });
 

@@ -34,10 +34,10 @@ port === 8000 && setTimeout(() => {
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-app.get('/offers/:page', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/offers/:page?', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(yield (0, feed_1.getOffers)(+req.params.page || 0));
 }));
-app.get('/products/:page', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/products/:page?', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(yield (0, feed_1.getProducts)(+req.params.page || 0));
 }));
 app.listen(port, () => {
