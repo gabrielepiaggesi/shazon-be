@@ -11,6 +11,10 @@ export const initJobs = (app) => {
 
         let page = 0;
         let intervalId = setInterval(async function() { 
+            if (page >= 30) {
+                clearInterval(intervalId);
+                return;
+            }
             try {
                 const newProducts = await scrapeAmazonProducts(page);
                 updateProducts(page, newProducts);
@@ -34,12 +38,15 @@ export const initJobs = (app) => {
 
         let page = 0;
         let intervalId = setInterval(async function() { 
+            if (page >= 30) {
+                clearInterval(intervalId);
+                return;
+            }
             try {
                 const newOffers = await scrapeAmazonOffersList(page);
                 updateOffers(page, newOffers);
                 console.log('Success scraping offers', page);
                 page++;
-                if (page >= 30) clearInterval(intervalId);
             } catch(e) {
                 console.log(e);
                 console.log('Impossibile scraping offers', page);

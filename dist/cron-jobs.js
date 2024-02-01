@@ -43,6 +43,10 @@ const initJobs = (app) => {
             let page = 0;
             let intervalId = setInterval(function () {
                 return __awaiter(this, void 0, void 0, function* () {
+                    if (page >= 30) {
+                        clearInterval(intervalId);
+                        return;
+                    }
                     try {
                         const newProducts = yield (0, amazon_scraper_1.scrapeAmazonProducts)(page);
                         (0, feed_1.updateProducts)(page, newProducts);
@@ -67,13 +71,15 @@ const initJobs = (app) => {
             let page = 0;
             let intervalId = setInterval(function () {
                 return __awaiter(this, void 0, void 0, function* () {
+                    if (page >= 30) {
+                        clearInterval(intervalId);
+                        return;
+                    }
                     try {
                         const newOffers = yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page);
                         (0, feed_1.updateOffers)(page, newOffers);
                         console.log('Success scraping offers', page);
                         page++;
-                        if (page >= 30)
-                            clearInterval(intervalId);
                     }
                     catch (e) {
                         console.log(e);
