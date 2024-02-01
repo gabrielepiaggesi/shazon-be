@@ -22,7 +22,7 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
     // await page.setViewport({width: 1512, height: 949});
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
 
-    const params = JSON.stringify({"version":1,"viewIndex":180,"presetId":"deals-collection-all-deals","sorting":"FEATURED","priceRange":{"from":20,"to":50},"dealState":"AVAILABLE"});
+    const params = JSON.stringify({"version":1,"viewIndex":(viewIndex * 60),"presetId":"deals-collection-all-deals","sorting":"FEATURED","dealState":"AVAILABLE"}); //"priceRange":{"from":20,"to":50}
     await page.goto('https://www.amazon.it/deals?deals-widget='+encodeURIComponent(params), { waitUntil: "domcontentloaded" }); 
     await page.waitForSelector('div[data-testid="grid-deals-container"]');
 
@@ -70,13 +70,13 @@ export async function scrapeAmazonProducts(viewIndex: number) {
             }
         });
     }
-    console.log('Browser', Browser);
+    // console.log('Browser', Browser);
     const page = await Browser.newPage();
-    console.log('page', page);
+    // console.log('page', page);
     await page.setViewport({width: 1512, height: 949});
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
 
-    await page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ref=sr_ex_n_1', { waitUntil: "domcontentloaded" }); 
+    await page.goto('https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&ref=sr_ex_n_1' + viewIndex ? '&page=' + viewIndex : '', { waitUntil: "domcontentloaded" }); 
     // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
     console.log('page', page);
     await page.waitForSelector('#nav-subnav');
@@ -103,9 +103,6 @@ export async function scrapeAmazonProducts(viewIndex: number) {
             const priceWhole = priceDiv?.getElementsByClassName('a-price-whole')[0]?.textContent;
             const priceFraction = priceDiv?.getElementsByClassName('a-price-fraction')[0]?.textContent;
             const price = priceWhole ? `${priceWhole}${priceFraction} €` : null;
-            // const priceSpan1 = priceDiv?.getElementsByClassName('a-price')[0];
-            // const priceSpan2 = priceSpan1?.getElementsByClassName('a-offscreen')[0];
-            // const price = priceSpan2?.textContent;
             
             const imgElem = productElement.querySelector('img');
             const img = imgElem?.getAttribute('src').replace(/AC_UL[1-9]/gm, `AC_UL960_FMwebp_QL65`);
@@ -117,7 +114,6 @@ export async function scrapeAmazonProducts(viewIndex: number) {
     });
 
     page.close();
-    // console.log(arr);
     return arr;
 }
 

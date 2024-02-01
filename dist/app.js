@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-const amazon_scraper_1 = require("./amazon-scraper");
+const cron_1 = require("./cron");
+const feed_1 = require("./feed");
 process.env.TZ = 'Europe/Rome';
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ', err);
@@ -25,17 +26,18 @@ const port = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json({ limit: 52428800 }));
 app.use(body_parser_1.default.urlencoded({ limit: 52428800, extended: true, parameterLimit: 50000 }));
-port === 8000 && setTimeout(() => {
-    (0, amazon_scraper_1.scrapeAmazonProducts)(0);
-}, 2000);
+(0, cron_1.initJobs)(app);
+// port === 8000 && setTimeout(() => {
+//   scrapeAmazonProducts(0);
+// }, 2000);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-app.get('/offers', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json(yield (0, amazon_scraper_1.scrapeAmazonOffersList)(0));
+app.get('/offers/:page', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json(yield (0, feed_1.getOffers)(+req.params.page || 0));
 }));
-app.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json(yield (0, amazon_scraper_1.scrapeAmazonProducts)(0));
+app.get('/products/:page', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json(yield (0, feed_1.getProducts)(+req.params.page || 0));
 }));
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
