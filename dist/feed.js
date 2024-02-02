@@ -24,6 +24,7 @@ function updateOffers(page, elements) {
 exports.updateOffers = updateOffers;
 function getProducts(page) {
     return __awaiter(this, void 0, void 0, function* () {
+        !exports.products[page] && console.log('getProducts from scraper', page);
         const res = exports.products[page] ? exports.products[page] : (yield (0, amazon_scraper_1.scrapeAmazonProducts)(page));
         page >= 29 && (yield (0, cron_jobs_1.closeBrowser)());
         return res;
@@ -32,6 +33,7 @@ function getProducts(page) {
 exports.getProducts = getProducts;
 function getOffers(page) {
     return __awaiter(this, void 0, void 0, function* () {
+        !exports.offers[page] && console.log('getOffers from scraper', page);
         const res = exports.offers[page] ? exports.offers[page] : (yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page));
         page >= 29 && (yield (0, cron_jobs_1.closeBrowser)());
         return res;
