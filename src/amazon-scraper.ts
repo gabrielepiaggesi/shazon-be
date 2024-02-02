@@ -1,6 +1,6 @@
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser as PuppeteerBrowser } from 'puppeteer';
 
-let Browser;
+export let Browser!: PuppeteerBrowser;
 const port = process.env.PORT || 8000;
 
 export async function scrapeAmazonOffersList(viewIndex: number) {

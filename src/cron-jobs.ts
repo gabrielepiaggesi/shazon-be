@@ -1,18 +1,23 @@
 import * as Cron from 'cron';
-import { scrapeAmazonOffersList, scrapeAmazonProducts } from './amazon-scraper';
+import { Browser, scrapeAmazonOffersList, scrapeAmazonProducts } from './amazon-scraper';
 import { updateOffers, updateProducts } from './feed';
 
 
 const CronJob = Cron.CronJob;
 
 export const initJobs = (app) => {
+
+    const MAX_PAGE = 30;
+    const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
+
     const productsJob = 
     new CronJob('*/10 * * * *', async function() {  // At 12:00 PM, only on Monday (ora server + 1)
 
         let page = 0;
-        let intervalId = setInterval(async function() { 
-            if (page >= 30) {
-                clearInterval(intervalId);
+        let productIntervalId = setInterval(async function() { 
+            if (page >= MAX_PAGE) {
+                clearInterval(productIntervalId);
+                await Browser.close();
                 return;
             }
             try {
@@ -20,13 +25,21 @@ export const initJobs = (app) => {
                 updateProducts(page, newProducts);
                 console.log('Success scraping products', page);
                 page++;
-                if (page >= 30) clearInterval(intervalId);
+                if (page >= MAX_PAGE) {
+                    clearInterval(productIntervalId);
+                    await Browser.close();
+                    return;
+                }
             } catch(e) {
                 console.log(e);
                 console.log('Impossibile scraping products', page);
             }
-        }, 10000);
-        if (page >= 30) clearInterval(intervalId);
+        }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
+        if (page >= MAX_PAGE) {
+            clearInterval(productIntervalId);
+            await Browser.close();
+            return;
+        }
 
     }, null, true, 'Europe/Rome');
     productsJob.start();
@@ -37,9 +50,10 @@ export const initJobs = (app) => {
     new CronJob('*/10 * * * *', async function() {  // At 12:00 PM, only on Monday (ora server + 1)
 
         let page = 0;
-        let intervalId = setInterval(async function() { 
-            if (page >= 30) {
-                clearInterval(intervalId);
+        let offersIntervalId = setInterval(async function() { 
+            if (page >= MAX_PAGE) {
+                clearInterval(offersIntervalId);
+                await Browser.close();
                 return;
             }
             try {
@@ -47,12 +61,21 @@ export const initJobs = (app) => {
                 updateOffers(page, newOffers);
                 console.log('Success scraping offers', page);
                 page++;
+                if (page >= MAX_PAGE) {
+                    clearInterval(offersIntervalId);
+                    await Browser.close();
+                    return;
+                }
             } catch(e) {
                 console.log(e);
                 console.log('Impossibile scraping offers', page);
             }
-        }, 10000);
-        if (page >= 30) clearInterval(intervalId);
+        }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
+        if (page >= MAX_PAGE) {
+            clearInterval(offersIntervalId);
+            await Browser.close();
+            return;
+        }
 
     }, null, true, 'Europe/Rome');
     offersJob.start();

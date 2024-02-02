@@ -12,14 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrapeAmazonProducts = exports.scrapeAmazonOffersList = void 0;
+exports.scrapeAmazonProducts = exports.scrapeAmazonOffersList = exports.Browser = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
-let Browser;
 const port = process.env.PORT || 8000;
 function scrapeAmazonOffersList(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!Browser) {
-            Browser = yield puppeteer_1.default.launch({
+        if (!exports.Browser) {
+            exports.Browser = yield puppeteer_1.default.launch({
                 headless: !(port === 8000),
                 args: port === 8000 ? [] : [
                     '--no-sandbox',
@@ -32,7 +31,7 @@ function scrapeAmazonOffersList(viewIndex) {
                 }
             });
         }
-        const page = yield Browser.newPage();
+        const page = yield exports.Browser.newPage();
         // await page.setViewport({width: 1512, height: 949});
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         const params = JSON.stringify({ "version": 1, "viewIndex": (viewIndex * 60), "presetId": "deals-collection-all-deals", "sorting": "FEATURED", "dealState": "AVAILABLE" }); //"priceRange":{"from":20,"to":50}
@@ -64,8 +63,8 @@ function scrapeAmazonOffersList(viewIndex) {
 exports.scrapeAmazonOffersList = scrapeAmazonOffersList;
 function scrapeAmazonProducts(viewIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!Browser) {
-            Browser = yield puppeteer_1.default.launch({
+        if (!exports.Browser) {
+            exports.Browser = yield puppeteer_1.default.launch({
                 headless: !(port === 8000),
                 args: port === 8000 ? [] : [
                     '--no-sandbox',
@@ -79,7 +78,7 @@ function scrapeAmazonProducts(viewIndex) {
             });
         }
         // console.log('Browser', Browser);
-        const page = yield Browser.newPage();
+        const page = yield exports.Browser.newPage();
         // console.log('page', page);
         yield page.setViewport({ width: 1512, height: 949 });
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');

@@ -38,13 +38,16 @@ const amazon_scraper_1 = require("./amazon-scraper");
 const feed_1 = require("./feed");
 const CronJob = Cron.CronJob;
 const initJobs = (app) => {
+    const MAX_PAGE = 30;
+    const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
     const productsJob = new CronJob('*/10 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
             let page = 0;
-            let intervalId = setInterval(function () {
+            let productIntervalId = setInterval(function () {
                 return __awaiter(this, void 0, void 0, function* () {
-                    if (page >= 30) {
-                        clearInterval(intervalId);
+                    if (page >= MAX_PAGE) {
+                        clearInterval(productIntervalId);
+                        yield amazon_scraper_1.Browser.close();
                         return;
                     }
                     try {
@@ -52,27 +55,34 @@ const initJobs = (app) => {
                         (0, feed_1.updateProducts)(page, newProducts);
                         console.log('Success scraping products', page);
                         page++;
-                        if (page >= 30)
-                            clearInterval(intervalId);
+                        if (page >= MAX_PAGE) {
+                            clearInterval(productIntervalId);
+                            yield amazon_scraper_1.Browser.close();
+                            return;
+                        }
                     }
                     catch (e) {
                         console.log(e);
                         console.log('Impossibile scraping products', page);
                     }
                 });
-            }, 10000);
-            if (page >= 30)
-                clearInterval(intervalId);
+            }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
+            if (page >= MAX_PAGE) {
+                clearInterval(productIntervalId);
+                yield amazon_scraper_1.Browser.close();
+                return;
+            }
         });
     }, null, true, 'Europe/Rome');
     productsJob.start();
     const offersJob = new CronJob('*/10 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
             let page = 0;
-            let intervalId = setInterval(function () {
+            let offersIntervalId = setInterval(function () {
                 return __awaiter(this, void 0, void 0, function* () {
-                    if (page >= 30) {
-                        clearInterval(intervalId);
+                    if (page >= MAX_PAGE) {
+                        clearInterval(offersIntervalId);
+                        yield amazon_scraper_1.Browser.close();
                         return;
                     }
                     try {
@@ -80,15 +90,23 @@ const initJobs = (app) => {
                         (0, feed_1.updateOffers)(page, newOffers);
                         console.log('Success scraping offers', page);
                         page++;
+                        if (page >= MAX_PAGE) {
+                            clearInterval(offersIntervalId);
+                            yield amazon_scraper_1.Browser.close();
+                            return;
+                        }
                     }
                     catch (e) {
                         console.log(e);
                         console.log('Impossibile scraping offers', page);
                     }
                 });
-            }, 10000);
-            if (page >= 30)
-                clearInterval(intervalId);
+            }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
+            if (page >= MAX_PAGE) {
+                clearInterval(offersIntervalId);
+                yield amazon_scraper_1.Browser.close();
+                return;
+            }
         });
     }, null, true, 'Europe/Rome');
     offersJob.start();
