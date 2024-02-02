@@ -32,22 +32,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initJobs = void 0;
+exports.initJobs = exports.closeBrowser = void 0;
 const Cron = __importStar(require("cron"));
 const amazon_scraper_1 = require("./amazon-scraper");
 const feed_1 = require("./feed");
 const CronJob = Cron.CronJob;
+function closeBrowser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield amazon_scraper_1.Browser.close();
+    });
+}
+exports.closeBrowser = closeBrowser;
 const initJobs = (app) => {
     const MAX_PAGE = 30;
     const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
-    const productsJob = new CronJob('*/10 * * * *', function () {
+    const productsJob = new CronJob('*/30 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
             let page = 0;
             let productIntervalId = setInterval(function () {
                 return __awaiter(this, void 0, void 0, function* () {
                     if (page >= MAX_PAGE) {
+                        yield closeBrowser();
                         clearInterval(productIntervalId);
-                        yield amazon_scraper_1.Browser.close();
                         return;
                     }
                     try {
@@ -56,8 +62,9 @@ const initJobs = (app) => {
                         console.log('Success scraping products', page);
                         page++;
                         if (page >= MAX_PAGE) {
+                            console.log('CLOSING BROWSER');
+                            yield closeBrowser();
                             clearInterval(productIntervalId);
-                            yield amazon_scraper_1.Browser.close();
                             return;
                         }
                     }
@@ -68,21 +75,21 @@ const initJobs = (app) => {
                 });
             }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
             if (page >= MAX_PAGE) {
+                yield closeBrowser();
                 clearInterval(productIntervalId);
-                yield amazon_scraper_1.Browser.close();
                 return;
             }
         });
     }, null, true, 'Europe/Rome');
     productsJob.start();
-    const offersJob = new CronJob('*/10 * * * *', function () {
+    const offersJob = new CronJob('*/30 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
             let page = 0;
             let offersIntervalId = setInterval(function () {
                 return __awaiter(this, void 0, void 0, function* () {
                     if (page >= MAX_PAGE) {
+                        yield closeBrowser();
                         clearInterval(offersIntervalId);
-                        yield amazon_scraper_1.Browser.close();
                         return;
                     }
                     try {
@@ -91,8 +98,8 @@ const initJobs = (app) => {
                         console.log('Success scraping offers', page);
                         page++;
                         if (page >= MAX_PAGE) {
+                            yield closeBrowser();
                             clearInterval(offersIntervalId);
-                            yield amazon_scraper_1.Browser.close();
                             return;
                         }
                     }
@@ -103,8 +110,8 @@ const initJobs = (app) => {
                 });
             }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
             if (page >= MAX_PAGE) {
+                yield closeBrowser();
                 clearInterval(offersIntervalId);
-                yield amazon_scraper_1.Browser.close();
                 return;
             }
         });

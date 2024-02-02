@@ -50,7 +50,7 @@ export async function scrapeAmazonOffersList(viewIndex: number) {
         return result;
     });
 
-    page.close();
+    await page.close();
     return arr;
 }
 
@@ -78,7 +78,7 @@ export async function scrapeAmazonProducts(viewIndex: number) {
 
     await page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true${viewIndex ? '&page=' + viewIndex : ''}&qid=1706730373&ref=sr_pg_1`, { waitUntil: "domcontentloaded" }); 
     // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
-    console.log('page', page);
+    // console.log('page', page);
     await page.waitForSelector('#nav-subnav');
     await page.waitForSelector('#search');
     await page.waitForSelector('div[data-asin]:not([data-asin=""])');
@@ -113,13 +113,13 @@ export async function scrapeAmazonProducts(viewIndex: number) {
         return result;
     });
 
-    page.close();
+    await page.close();
     return arr;
 }
 
 
 
-async function autoScroll(page){
+async function autoScroll(page) {
     await page.evaluate(async () => {
 
         await new Promise((resolve) => {

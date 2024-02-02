@@ -1,4 +1,5 @@
 import { scrapeAmazonOffersList, scrapeAmazonProducts } from "./amazon-scraper";
+import { closeBrowser } from "./cron-jobs";
 
 export let offers = {};
 export let products = {};
@@ -12,9 +13,13 @@ export function updateOffers(page, elements) {
 }
 
 export async function getProducts(page: number) {
-    return products[page] ? products[page] : (await scrapeAmazonProducts(page));
+    const res = products[page] ? products[page] : (await scrapeAmazonProducts(page));
+    page >= 29 && await closeBrowser();
+    return res;
 }
 
 export async function getOffers(page: number) {
-    return offers[page] ? offers[page] : (await scrapeAmazonOffersList(page));
+    const res = offers[page] ? offers[page] : (await scrapeAmazonOffersList(page));
+    page >= 29 && await closeBrowser();
+    return res;
 }
