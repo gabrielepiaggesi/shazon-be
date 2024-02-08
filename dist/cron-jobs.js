@@ -39,6 +39,7 @@ const feed_1 = require("./feed");
 const CronJob = Cron.CronJob;
 function closeBrowser() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield amazon_scraper_1.Browser.disconnect();
         yield amazon_scraper_1.Browser.close();
     });
 }

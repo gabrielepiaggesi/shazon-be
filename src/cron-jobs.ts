@@ -6,6 +6,7 @@ import { updateOffers, updateProducts } from './feed';
 const CronJob = Cron.CronJob;
 
 export async function closeBrowser() {
+    await Browser.disconnect();
     await Browser.close();
 }
 
