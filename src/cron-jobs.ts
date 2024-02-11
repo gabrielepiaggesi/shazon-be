@@ -50,7 +50,7 @@ export const initJobs = async (app) => {
             try {
                 const newProducts = await scrapeAmazonProducts(page, Browser);
                 updateProducts(page, newProducts);
-                console.log('----------- success products', page);
+                console.log('----------- success products', page, newProducts.length);
                 page++;
             } catch(e) {
                 console.log('----------- error products', page);
@@ -72,7 +72,7 @@ export const initJobs = async (app) => {
             try {
                 const newOffers = await scrapeAmazonOffersList(page, Browser);
                 updateOffers(page, newOffers);
-                console.log('----------- success offers', page);
+                console.log('----------- success offers', page, newOffers.length);
                 page++;
             } catch(e) {
                 console.log('----------- error offers', page);

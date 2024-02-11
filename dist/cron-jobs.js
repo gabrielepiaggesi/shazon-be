@@ -87,7 +87,7 @@ const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
                 try {
                     const newProducts = yield (0, amazon_scraper_1.scrapeAmazonProducts)(page, Browser);
                     (0, feed_1.updateProducts)(page, newProducts);
-                    console.log('----------- success products', page);
+                    console.log('----------- success products', page, newProducts.length);
                     page++;
                 }
                 catch (e) {
@@ -107,7 +107,7 @@ const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
                 try {
                     const newOffers = yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page, Browser);
                     (0, feed_1.updateOffers)(page, newOffers);
-                    console.log('----------- success offers', page);
+                    console.log('----------- success offers', page, newOffers.length);
                     page++;
                 }
                 catch (e) {
