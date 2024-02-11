@@ -88,11 +88,12 @@ const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
                     const newProducts = yield (0, amazon_scraper_1.scrapeAmazonProducts)(page, Browser);
                     (0, feed_1.updateProducts)(page, newProducts);
                     console.log('----------- success products', page, newProducts.length);
-                    page++;
+                    // page++;
                 }
                 catch (e) {
                     console.log('----------- error products', page);
                 }
+                page++;
             }
             Browser = yield closeBrowser(Browser);
         });
@@ -108,11 +109,12 @@ const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
                     const newOffers = yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page, Browser);
                     (0, feed_1.updateOffers)(page, newOffers);
                     console.log('----------- success offers', page, newOffers.length);
-                    page++;
+                    // page++;
                 }
                 catch (e) {
                     console.log('----------- error offers', page);
                 }
+                page++;
             }
             Browser = yield closeBrowser(Browser);
         });
