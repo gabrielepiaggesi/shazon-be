@@ -14,6 +14,7 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
 
         const params = JSON.stringify({ "version": 1, "viewIndex": (viewIndex * 60), "presetId": "deals-collection-all-deals", "sorting": "FEATURED", "dealState": "AVAILABLE" }); //"priceRange":{"from":20,"to":50}
         await page.goto('https://www.amazon.it/deals?deals-widget=' + encodeURIComponent(params), { waitUntil: "domcontentloaded" });
+        console.log(page.url());
         await page.waitForSelector('div[data-testid="grid-deals-container"]');
 
         await autoScroll(page);
@@ -62,9 +63,10 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
     
         await page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true${viewIndex ? '&page=' + viewIndex : ''}&qid=1706730373&ref=sr_pg_1`, { waitUntil: "domcontentloaded" });
+        console.log(page.url());
         // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
-        await page.waitForSelector('#nav-subnav');
-        await page.waitForSelector('#search');
+        // await page.waitForSelector('#nav-subnav');
+        // await page.waitForSelector('#search');
         await page.waitForSelector('div[data-asin]:not([data-asin=""])');
     
         await autoScroll(page);
