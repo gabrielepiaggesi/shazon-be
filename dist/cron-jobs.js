@@ -31,93 +31,92 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initJobs = exports.closeBrowser = void 0;
+exports.initJobs = exports.openBrowser = exports.closeBrowser = void 0;
 const Cron = __importStar(require("cron"));
 const amazon_scraper_1 = require("./amazon-scraper");
 const feed_1 = require("./feed");
+const puppeteer_1 = __importDefault(require("puppeteer"));
+const utils_1 = require("./utils");
 const CronJob = Cron.CronJob;
-function closeBrowser() {
+const port = process.env.PORT || 8000;
+function closeBrowser(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield amazon_scraper_1.Browser.disconnect();
-        yield amazon_scraper_1.Browser.close();
+        console.log('CLOSE BROWSER');
+        yield Browser.disconnect();
+        yield Browser.close();
+        return Browser;
     });
 }
 exports.closeBrowser = closeBrowser;
-const initJobs = (app) => {
+function openBrowser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('OPEN NEW BROWSER');
+        const Browser = yield puppeteer_1.default.launch({
+            headless: !(port === 8000),
+            args: port === 8000 ? [] : [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                `--window-size=1512,949`,
+                "--disable-dev-shm-usage",
+                "--single-process",
+                "--no-zygote",
+            ],
+            defaultViewport: {
+                width: 1512,
+                height: 949
+            }
+        });
+        return Browser;
+    });
+}
+exports.openBrowser = openBrowser;
+const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
     const MAX_PAGE = 30;
     const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
     const productsJob = new CronJob('*/30 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
+            let Browser = yield openBrowser();
             let page = 0;
-            let productIntervalId = setInterval(function () {
-                return __awaiter(this, void 0, void 0, function* () {
-                    if (page >= MAX_PAGE) {
-                        yield closeBrowser();
-                        clearInterval(productIntervalId);
-                        return;
-                    }
-                    try {
-                        const newProducts = yield (0, amazon_scraper_1.scrapeAmazonProducts)(page);
-                        (0, feed_1.updateProducts)(page, newProducts);
-                        console.log('Success scraping products', page);
-                        page++;
-                        if (page >= MAX_PAGE) {
-                            console.log('CLOSING BROWSER');
-                            yield closeBrowser();
-                            clearInterval(productIntervalId);
-                            return;
-                        }
-                    }
-                    catch (e) {
-                        console.log(e);
-                        console.log('Impossibile scraping products', page);
-                    }
-                });
-            }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
-            if (page >= MAX_PAGE) {
-                yield closeBrowser();
-                clearInterval(productIntervalId);
-                return;
+            while (page < MAX_PAGE) {
+                yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
+                try {
+                    const newProducts = yield (0, amazon_scraper_1.scrapeAmazonProducts)(page, Browser);
+                    (0, feed_1.updateProducts)(page, newProducts);
+                    console.log('----------- success products', page);
+                    page++;
+                }
+                catch (e) {
+                    console.log('----------- error products', page);
+                }
             }
+            Browser = yield closeBrowser(Browser);
         });
     }, null, true, 'Europe/Rome');
     productsJob.start();
     const offersJob = new CronJob('*/30 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
+            let Browser = yield openBrowser();
             let page = 0;
-            let offersIntervalId = setInterval(function () {
-                return __awaiter(this, void 0, void 0, function* () {
-                    if (page >= MAX_PAGE) {
-                        yield closeBrowser();
-                        clearInterval(offersIntervalId);
-                        return;
-                    }
-                    try {
-                        const newOffers = yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page);
-                        (0, feed_1.updateOffers)(page, newOffers);
-                        console.log('Success scraping offers', page);
-                        page++;
-                        if (page >= MAX_PAGE) {
-                            yield closeBrowser();
-                            clearInterval(offersIntervalId);
-                            return;
-                        }
-                    }
-                    catch (e) {
-                        console.log(e);
-                        console.log('Impossibile scraping offers', page);
-                    }
-                });
-            }, (SECONDS_WAIT_FOR_NEXT_PAGE * 1000));
-            if (page >= MAX_PAGE) {
-                yield closeBrowser();
-                clearInterval(offersIntervalId);
-                return;
+            while (page < MAX_PAGE) {
+                yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
+                try {
+                    const newOffers = yield (0, amazon_scraper_1.scrapeAmazonOffersList)(page, Browser);
+                    (0, feed_1.updateOffers)(page, newOffers);
+                    console.log('----------- success offers', page);
+                    page++;
+                }
+                catch (e) {
+                    console.log('----------- error offers', page);
+                }
             }
+            Browser = yield closeBrowser(Browser);
         });
     }, null, true, 'Europe/Rome');
     offersJob.start();
-};
+});
 exports.initJobs = initJobs;
 //# sourceMappingURL=cron-jobs.js.map

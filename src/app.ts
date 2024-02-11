@@ -18,9 +18,9 @@ app.use(bodyParser.urlencoded({limit: 52428800, extended: true, parameterLimit: 
 initJobs(app);
 
 
-port === 8000 && setTimeout(() => {
-  scrapeAmazonProducts(1);
-}, 2000);
+// port === 8000 && setTimeout(() => {
+//   scrapeAmazonProducts(1);
+// }, 2000);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
