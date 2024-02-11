@@ -15,9 +15,10 @@ export async function closeBrowser(Browser: PuppeteerBrowser) {
 }
 
 export async function openBrowser() {
-    console.log('OPEN NEW BROWSER');
+    const headless = !(port === 8000);
+    console.log('OPEN NEW BROWSER', headless);
     const Browser: PuppeteerBrowser = await puppeteer.launch({
-        headless: !(port === 8000),
+        headless,
         args: port === 8000 ? [] : [
             '--no-sandbox',
             '--disable-setuid-sandbox',

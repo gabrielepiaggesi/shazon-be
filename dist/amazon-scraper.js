@@ -36,7 +36,8 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
                     const url = linkElem === null || linkElem === void 0 ? void 0 : linkElem.getAttribute('href');
                     const name = (_a = linkElem === null || linkElem === void 0 ? void 0 : linkElem.querySelector('div')) === null || _a === void 0 ? void 0 : _a.textContent;
                     const product = { idx: i, img: img, url: url, name, offer };
-                    !url.includes('deal/') && result.push(product);
+                    // !url.includes('deal/') && result.push(product);
+                    result.push(product);
                 }
                 return result;
             });
@@ -86,7 +87,8 @@ function scrapeAmazonProducts(viewIndex, Browser) {
                     const imgElem = productElement.querySelector('img');
                     const img = imgElem === null || imgElem === void 0 ? void 0 : imgElem.getAttribute('src').replace(/AC_UL[1-9]/gm, `AC_UL960_FMwebp_QL65`);
                     const product = { idx: i, img, url, name, stars, price, asin };
-                    !url.includes('deal/') && result.push(product);
+                    // !url.includes('deal/') && result.push(product);
+                    result.push(product);
                 }
                 return result;
             });

@@ -35,7 +35,8 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
                 const name = linkElem?.querySelector('div')?.textContent;
 
                 const product = { idx: i, img: img, url: url, name, offer };
-                !url.includes('deal/') && result.push(product);
+                // !url.includes('deal/') && result.push(product);
+                result.push(product);
             }
             return result;
         });
@@ -91,7 +92,8 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
                 const img = imgElem?.getAttribute('src').replace(/AC_UL[1-9]/gm, `AC_UL960_FMwebp_QL65`);
     
                 const product = { idx: i, img, url, name, stars, price, asin };
-                !url.includes('deal/') && result.push(product);
+                // !url.includes('deal/') && result.push(product);
+                result.push(product);
             }
             return result;
         });

@@ -54,9 +54,10 @@ function closeBrowser(Browser) {
 exports.closeBrowser = closeBrowser;
 function openBrowser() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('OPEN NEW BROWSER');
+        const headless = !(port === 8000);
+        console.log('OPEN NEW BROWSER', headless);
         const Browser = yield puppeteer_1.default.launch({
-            headless: !(port === 8000),
+            headless,
             args: port === 8000 ? [] : [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
