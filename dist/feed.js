@@ -12,12 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOffers = exports.getProducts = exports.updateOffers = exports.updateProducts = exports.products = exports.offers = void 0;
 exports.offers = {};
 exports.products = {};
-function updateProducts(page, elements) {
-    exports.products[page] = elements;
+function updateProducts(elements) {
+    const pages = Object.keys(exports.offers);
+    const lastPage = pages.length ? +pages[pages.length - 1] : -1;
+    exports.products[(lastPage + 1)] = elements;
 }
 exports.updateProducts = updateProducts;
-function updateOffers(page, elements) {
-    exports.offers[page] = elements;
+function updateOffers(elements) {
+    const pages = Object.keys(exports.offers);
+    const lastPage = pages.length ? +pages[pages.length - 1] : -1;
+    exports.offers[(lastPage + 1)] = elements;
 }
 exports.updateOffers = updateOffers;
 function getProducts(page) {

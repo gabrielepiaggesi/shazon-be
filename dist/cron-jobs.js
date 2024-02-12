@@ -41,18 +41,14 @@ const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, utils_1.delay)(30 * 1000);
     yield (0, amazon_scraper_1.productsJob)();
     yield (0, amazon_scraper_1.offersJob)();
-    const startProductsJob = new CronJob('*/45 * * * *', function () {
+    const startAmazonJob = new CronJob('*/30 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
+            yield (0, amazon_scraper_1.offersJob)();
+            yield (0, utils_1.delay)(30 * 1000);
             yield (0, amazon_scraper_1.productsJob)();
         });
     }, null, true, 'Europe/Rome');
-    startProductsJob.start();
-    const starterOffersJob = new CronJob('*/10 * * * *', function () {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield (0, amazon_scraper_1.offersJob)();
-        });
-    }, null, true, 'Europe/Rome');
-    starterOffersJob.start();
+    startAmazonJob.start();
 });
 exports.initJobs = initJobs;
 //# sourceMappingURL=cron-jobs.js.map

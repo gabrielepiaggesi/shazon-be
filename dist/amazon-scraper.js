@@ -55,18 +55,28 @@ function productsJob() {
     return __awaiter(this, void 0, void 0, function* () {
         let Browser = yield openBrowser();
         let page = 0;
+        let retry = 0;
         while (page < MAX_PAGE) {
             yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
             try {
                 const newProducts = yield scrapeAmazonProducts(page, Browser);
-                (0, feed_1.updateProducts)(page, newProducts);
+                (0, feed_1.updateProducts)(newProducts);
                 console.log('----------- success products', page, newProducts.length);
-                // page++;
+                page++;
+                retry = 0;
             }
             catch (e) {
                 console.log('----------- error products', page);
+                if (retry < 3) {
+                    retry++;
+                    console.log('----------- retry products', page);
+                }
+                else {
+                    console.log('----------- stop retrying products', page);
+                    retry = 0;
+                    page++;
+                }
             }
-            page++;
         }
         Browser = yield closeBrowser(Browser);
     });
@@ -76,18 +86,28 @@ function offersJob() {
     return __awaiter(this, void 0, void 0, function* () {
         let Browser = yield openBrowser();
         let page = 0;
+        let retry = 0;
         while (page < MAX_PAGE) {
             yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
             try {
                 const newOffers = yield scrapeAmazonOffersList(page, Browser);
-                (0, feed_1.updateOffers)(page, newOffers);
+                (0, feed_1.updateOffers)(newOffers);
                 console.log('----------- success offers', page, newOffers.length);
-                // page++;
+                page++;
+                retry = 0;
             }
             catch (e) {
                 console.log('----------- error offers', page);
+                if (retry < 3) {
+                    retry++;
+                    console.log('----------- retry offers', page);
+                }
+                else {
+                    console.log('----------- stop retrying offers', page);
+                    retry = 0;
+                    page++;
+                }
             }
-            page++;
         }
         Browser = yield closeBrowser(Browser);
     });
@@ -130,7 +150,7 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
             console.log(e);
             console.log('Impossibile scraping offers', viewIndex);
             yield page.close();
-            // throw new Error('Impossibile scraping offers ' + viewIndex);
+            throw new Error('Impossibile scraping offers ' + viewIndex);
         }
         finally {
             yield page.close();
@@ -146,7 +166,8 @@ function scrapeAmazonProducts(viewIndex, Browser) {
         try {
             yield page.setViewport({ width: 1512, height: 949 });
             yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
-            yield page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true${viewIndex ? '&page=' + viewIndex : ''}&qid=1706730373&ref=sr_pg_1`, { waitUntil: "load" });
+            viewIndex && (yield page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true${viewIndex ? '&page=' + viewIndex : ''}&qid=1706730373&ref=sr_pg_1`, { waitUntil: "domcontentloaded" }));
+            !viewIndex && (yield page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&qid=1706730373&ref=sr_pg_1`, { waitUntil: "domcontentloaded" }));
             console.log(page.url());
             // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
             yield page.waitForSelector('#nav-subnav');
@@ -184,7 +205,7 @@ function scrapeAmazonProducts(viewIndex, Browser) {
             console.log(e);
             console.log('Impossibile scraping products', viewIndex);
             yield page.close();
-            // throw new Error('Impossibile scraping products ' + viewIndex);
+            throw new Error('Impossibile scraping products ' + viewIndex);
         }
         return arr;
     });

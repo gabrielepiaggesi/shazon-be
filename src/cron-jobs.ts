@@ -8,15 +8,12 @@ export const initJobs = async (app) => {
     await productsJob();
     await offersJob();
 
-    const startProductsJob = 
-    new CronJob('*/45 * * * *', async function() {  // At 12:00 PM, only on Monday (ora server + 1)
+    const startAmazonJob = 
+    new CronJob('*/30 * * * *', async function() {  // At 12:00 PM, only on Monday (ora server + 1)
+        await offersJob();
+        await delay(30 * 1000);
         await productsJob();
     }, null, true, 'Europe/Rome');
-    startProductsJob.start();
+    startAmazonJob.start();
 
-    const starterOffersJob = 
-    new CronJob('*/10 * * * *', async function() {  // At 12:00 PM, only on Monday (ora server + 1)
-        await offersJob();
-    }, null, true, 'Europe/Rome');
-    starterOffersJob.start();
 }

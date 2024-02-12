@@ -38,17 +38,26 @@ export async function openBrowser() {
 export async function productsJob() {
     let Browser = await openBrowser();
     let page = 0;
+    let retry = 0;
     while(page < MAX_PAGE) {
         await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
         try {
             const newProducts = await scrapeAmazonProducts(page, Browser);
-            updateProducts(page, newProducts);
+            updateProducts(newProducts);
             console.log('----------- success products', page, newProducts.length);
-            // page++;
+            page++;
+            retry = 0;
         } catch(e) {
             console.log('----------- error products', page);
+            if (retry < 3) {
+                retry++;
+                console.log('----------- retry products', page);
+            } else {
+                console.log('----------- stop retrying products', page);
+                retry = 0;
+                page++;
+            }
         }
-        page++;
     }
     Browser = await closeBrowser(Browser);
 }
@@ -57,17 +66,26 @@ export async function productsJob() {
 export async function offersJob() {
     let Browser = await openBrowser();
     let page = 0;
+    let retry = 0;
     while(page < MAX_PAGE) {
         await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
         try {
             const newOffers = await scrapeAmazonOffersList(page, Browser);
-            updateOffers(page, newOffers);
+            updateOffers(newOffers);
             console.log('----------- success offers', page, newOffers.length);
-            // page++;
+            page++;
+            retry = 0;
         } catch(e) {
             console.log('----------- error offers', page);
+            if (retry < 3) {
+                retry++;
+                console.log('----------- retry offers', page);
+            } else {
+                console.log('----------- stop retrying offers', page);
+                retry = 0;
+                page++;
+            }
         }
-        page++;
     }
     Browser = await closeBrowser(Browser);
 }
@@ -116,7 +134,7 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
         console.log(e);
         console.log('Impossibile scraping offers', viewIndex);
         await page.close();
-        // throw new Error('Impossibile scraping offers ' + viewIndex);
+        throw new Error('Impossibile scraping offers ' + viewIndex);
     } finally {
         await page.close();
     }
@@ -133,7 +151,8 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
         await page.setViewport({ width: 1512, height: 949 });
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
     
-        await page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true${viewIndex ? '&page=' + viewIndex : ''}&qid=1706730373&ref=sr_pg_1`, { waitUntil: "load" });
+        viewIndex && await page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true${viewIndex ? '&page=' + viewIndex : ''}&qid=1706730373&ref=sr_pg_1`, { waitUntil: "domcontentloaded" });
+        !viewIndex && await page.goto(`https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&qid=1706730373&ref=sr_pg_1`, { waitUntil: "domcontentloaded" });
         console.log(page.url());
         // https://www.amazon.it/s?i=kitchen&rh=n%3A524015031&dc&fs=true&page=2&qid=1706730373&ref=sr_pg_1 < -------- PAGINATION!
         await page.waitForSelector('#nav-subnav');
@@ -176,7 +195,7 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
         console.log(e);
         console.log('Impossibile scraping products', viewIndex);
         await page.close();
-        // throw new Error('Impossibile scraping products ' + viewIndex);
+        throw new Error('Impossibile scraping products ' + viewIndex);
     }
 
     return arr;
