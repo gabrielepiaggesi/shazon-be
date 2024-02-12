@@ -135,7 +135,6 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
         finally {
             yield page.close();
         }
-        yield page.close();
         return arr;
     });
 }
@@ -179,6 +178,7 @@ function scrapeAmazonProducts(viewIndex, Browser) {
                 return result;
             });
             console.log('Success scraping products', viewIndex);
+            yield page.close();
         }
         catch (e) {
             console.log(e);
@@ -186,10 +186,6 @@ function scrapeAmazonProducts(viewIndex, Browser) {
             yield page.close();
             // throw new Error('Impossibile scraping products ' + viewIndex);
         }
-        finally {
-            yield page.close();
-        }
-        yield page.close();
         return arr;
     });
 }

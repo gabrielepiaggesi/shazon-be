@@ -1,8 +1,10 @@
 import * as Cron from 'cron';
 import { offersJob, productsJob } from './amazon-scraper';
+import { delay } from './utils';
 const CronJob = Cron.CronJob;
 
 export const initJobs = async (app) => {
+    await delay(30 * 1000);
     await productsJob();
     await offersJob();
 

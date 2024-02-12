@@ -35,8 +35,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initJobs = void 0;
 const Cron = __importStar(require("cron"));
 const amazon_scraper_1 = require("./amazon-scraper");
+const utils_1 = require("./utils");
 const CronJob = Cron.CronJob;
 const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, utils_1.delay)(30 * 1000);
     yield (0, amazon_scraper_1.productsJob)();
     yield (0, amazon_scraper_1.offersJob)();
     const startProductsJob = new CronJob('*/45 * * * *', function () {

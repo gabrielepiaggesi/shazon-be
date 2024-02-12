@@ -121,8 +121,6 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
         await page.close();
     }
 
-    await page.close();
-
     return arr;
 }
 
@@ -173,16 +171,13 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
             return result;
         });
         console.log('Success scraping products', viewIndex);
+        await page.close();
     } catch(e) {
         console.log(e);
         console.log('Impossibile scraping products', viewIndex);
         await page.close();
         // throw new Error('Impossibile scraping products ' + viewIndex);
-    } finally {
-        await page.close();
     }
-
-    await page.close();
 
     return arr;
 }
