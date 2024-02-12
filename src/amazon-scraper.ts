@@ -8,7 +8,7 @@ const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
 
 export async function closeBrowser(Browser: PuppeteerBrowser) {
     console.log('CLOSE BROWSER');
-    await Browser.close();
+    await Browser.close().then(() => console.log('browser closed')).catch((e) => console.error('browser closing error', e));
     return Browser;
 }
 
@@ -32,6 +32,8 @@ export async function openBrowser() {
     });
     return Browser;
 }
+
+// https://www.amazon.it/s?i=beauty&rh=n%3A6198082031&dc&fs=true&ds=v1%3A1beD71AYUA6N1dmmmVi%2FuoInBnET13ywZtuY7Pms%2FBw&qid=1707750899&ref=sr_ex_n_1
 
 
 export async function productsJob() {
@@ -132,10 +134,10 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
     } catch (e) {
         console.log(e);
         console.log('Impossibile scraping offers', viewIndex);
-        await page.close();
+        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         throw new Error('Impossibile scraping offers ' + viewIndex);
     } finally {
-        await page.close();
+        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
     }
 
     return arr;
@@ -189,11 +191,11 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
             return result;
         });
         console.log('Success scraping products', viewIndex);
-        await page.close();
+        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
     } catch(e) {
         console.log(e);
         console.log('Impossibile scraping products', viewIndex);
-        await page.close();
+        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         throw new Error('Impossibile scraping products ' + viewIndex);
     }
 

@@ -22,7 +22,7 @@ const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
 function closeBrowser(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('CLOSE BROWSER');
-        yield Browser.close();
+        yield Browser.close().then(() => console.log('browser closed')).catch((e) => console.error('browser closing error', e));
         return Browser;
     });
 }
@@ -50,6 +50,7 @@ function openBrowser() {
     });
 }
 exports.openBrowser = openBrowser;
+// https://www.amazon.it/s?i=beauty&rh=n%3A6198082031&dc&fs=true&ds=v1%3A1beD71AYUA6N1dmmmVi%2FuoInBnET13ywZtuY7Pms%2FBw&qid=1707750899&ref=sr_ex_n_1
 function productsJob() {
     return __awaiter(this, void 0, void 0, function* () {
         let Browser = yield openBrowser();
@@ -148,11 +149,11 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping offers', viewIndex);
-            yield page.close();
+            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
             throw new Error('Impossibile scraping offers ' + viewIndex);
         }
         finally {
-            yield page.close();
+            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         }
         return arr;
     });
@@ -198,12 +199,12 @@ function scrapeAmazonProducts(viewIndex, Browser) {
                 return result;
             });
             console.log('Success scraping products', viewIndex);
-            yield page.close();
+            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         }
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping products', viewIndex);
-            yield page.close();
+            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
             throw new Error('Impossibile scraping products ' + viewIndex);
         }
         return arr;
