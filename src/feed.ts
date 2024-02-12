@@ -2,7 +2,7 @@ export let offers = {};
 export let products = {};
 
 export function updateProducts(elements) {
-    const pages = Object.keys(offers);
+    const pages = Object.keys(products);
     const lastPage = pages.length ? +pages[pages.length - 1] : -1;
     products[(lastPage+1)] = elements;
 }

@@ -5,15 +5,18 @@ const CronJob = Cron.CronJob;
 
 export const initJobs = async (app) => {
     await delay(30 * 1000);
-    await productsJob();
-    await offersJob();
+    await startScraping();
 
     const startAmazonJob = 
     new CronJob('*/30 * * * *', async function() {  // At 12:00 PM, only on Monday (ora server + 1)
-        await offersJob();
-        await delay(30 * 1000);
-        await productsJob();
+        await startScraping();
     }, null, true, 'Europe/Rome');
     startAmazonJob.start();
 
+}
+
+export async function startScraping() {
+    await offersJob();
+    await delay(30 * 1000);
+    await productsJob();
 }

@@ -32,23 +32,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initJobs = void 0;
+exports.startScraping = exports.initJobs = void 0;
 const Cron = __importStar(require("cron"));
 const amazon_scraper_1 = require("./amazon-scraper");
 const utils_1 = require("./utils");
 const CronJob = Cron.CronJob;
 const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, utils_1.delay)(30 * 1000);
-    yield (0, amazon_scraper_1.productsJob)();
-    yield (0, amazon_scraper_1.offersJob)();
+    yield startScraping();
     const startAmazonJob = new CronJob('*/30 * * * *', function () {
         return __awaiter(this, void 0, void 0, function* () {
-            yield (0, amazon_scraper_1.offersJob)();
-            yield (0, utils_1.delay)(30 * 1000);
-            yield (0, amazon_scraper_1.productsJob)();
+            yield startScraping();
         });
     }, null, true, 'Europe/Rome');
     startAmazonJob.start();
 });
 exports.initJobs = initJobs;
+function startScraping() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, amazon_scraper_1.offersJob)();
+        yield (0, utils_1.delay)(30 * 1000);
+        yield (0, amazon_scraper_1.productsJob)();
+    });
+}
+exports.startScraping = startScraping;
 //# sourceMappingURL=cron-jobs.js.map
