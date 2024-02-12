@@ -47,11 +47,13 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping offers', viewIndex);
+            yield page.close();
             // throw new Error('Impossibile scraping offers ' + viewIndex);
         }
         finally {
             yield page.close();
         }
+        yield page.close();
         return arr;
     });
 }
@@ -99,11 +101,13 @@ function scrapeAmazonProducts(viewIndex, Browser) {
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping products', viewIndex);
+            yield page.close();
             // throw new Error('Impossibile scraping products ' + viewIndex);
         }
         finally {
             yield page.close();
         }
+        yield page.close();
         return arr;
     });
 }
