@@ -17,8 +17,8 @@ const puppeteer_1 = __importDefault(require("puppeteer"));
 const utils_1 = require("./utils");
 const feed_1 = require("./feed");
 const port = process.env.PORT || 8000;
-const MAX_PAGE = 30;
-const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
+const MAX_PAGE = 20;
+const SECONDS_WAIT_FOR_NEXT_PAGE = 5;
 function closeBrowser(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('CLOSE BROWSER');
@@ -51,9 +51,8 @@ function openBrowser() {
 }
 exports.openBrowser = openBrowser;
 // https://www.amazon.it/s?i=beauty&rh=n%3A6198082031&dc&fs=true&ds=v1%3A1beD71AYUA6N1dmmmVi%2FuoInBnET13ywZtuY7Pms%2FBw&qid=1707750899&ref=sr_ex_n_1
-function productsJob() {
+function productsJob(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
-        let Browser = yield openBrowser();
         let page = 0;
         let retry = 0;
         while (page < MAX_PAGE) {
@@ -78,13 +77,11 @@ function productsJob() {
                 }
             }
         }
-        Browser = yield closeBrowser(Browser);
     });
 }
 exports.productsJob = productsJob;
-function offersJob() {
+function offersJob(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
-        let Browser = yield openBrowser();
         let page = 0;
         let retry = 0;
         while (page < MAX_PAGE) {
@@ -109,7 +106,6 @@ function offersJob() {
                 }
             }
         }
-        Browser = yield closeBrowser(Browser);
     });
 }
 exports.offersJob = offersJob;

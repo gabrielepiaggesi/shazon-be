@@ -50,9 +50,11 @@ const initJobs = (app) => __awaiter(void 0, void 0, void 0, function* () {
 exports.initJobs = initJobs;
 function startScraping() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, amazon_scraper_1.offersJob)();
-        yield (0, utils_1.delay)(30 * 1000);
-        yield (0, amazon_scraper_1.productsJob)();
+        let browser = yield (0, amazon_scraper_1.openBrowser)();
+        yield (0, amazon_scraper_1.offersJob)(browser);
+        yield (0, utils_1.delay)(5 * 1000);
+        yield (0, amazon_scraper_1.productsJob)(browser);
+        browser = yield (0, amazon_scraper_1.closeBrowser)(browser);
     });
 }
 exports.startScraping = startScraping;

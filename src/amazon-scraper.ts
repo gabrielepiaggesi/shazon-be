@@ -3,8 +3,8 @@ import { delay } from './utils';
 import { updateOffers, updateProducts } from './feed';
 
 const port = process.env.PORT || 8000;
-const MAX_PAGE = 30;
-const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
+const MAX_PAGE = 20;
+const SECONDS_WAIT_FOR_NEXT_PAGE = 5;
 
 export async function closeBrowser(Browser: PuppeteerBrowser) {
     console.log('CLOSE BROWSER');
@@ -36,8 +36,7 @@ export async function openBrowser() {
 // https://www.amazon.it/s?i=beauty&rh=n%3A6198082031&dc&fs=true&ds=v1%3A1beD71AYUA6N1dmmmVi%2FuoInBnET13ywZtuY7Pms%2FBw&qid=1707750899&ref=sr_ex_n_1
 
 
-export async function productsJob() {
-    let Browser = await openBrowser();
+export async function productsJob(Browser: PuppeteerBrowser) {
     let page = 0;
     let retry = 0;
     while(page < MAX_PAGE) {
@@ -60,12 +59,10 @@ export async function productsJob() {
             }
         }
     }
-    Browser = await closeBrowser(Browser);
 }
 
 
-export async function offersJob() {
-    let Browser = await openBrowser();
+export async function offersJob(Browser: PuppeteerBrowser) {
     let page = 0;
     let retry = 0;
     while(page < MAX_PAGE) {
@@ -88,7 +85,6 @@ export async function offersJob() {
             }
         }
     }
-    Browser = await closeBrowser(Browser);
 }
 
 
