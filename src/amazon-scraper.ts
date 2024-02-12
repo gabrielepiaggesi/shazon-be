@@ -43,7 +43,7 @@ export async function productsJob(Browser: PuppeteerBrowser) {
         await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
         try {
             const newProducts = await scrapeAmazonProducts(page, Browser);
-            updateProducts(newProducts);
+            // updateProducts(newProducts);
             console.log('----------- success products', page, newProducts.length);
             page++;
             retry = 0;
@@ -69,7 +69,7 @@ export async function offersJob(Browser: PuppeteerBrowser) {
         await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
         try {
             const newOffers = await scrapeAmazonOffersList(page, Browser);
-            updateOffers(newOffers);
+            // updateOffers(newOffers);
             console.log('----------- success offers', page, newOffers.length);
             page++;
             retry = 0;

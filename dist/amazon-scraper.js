@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrapeAmazonProducts = exports.scrapeAmazonOffersList = exports.offersJob = exports.productsJob = exports.openBrowser = exports.closeBrowser = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const utils_1 = require("./utils");
-const feed_1 = require("./feed");
 const port = process.env.PORT || 8000;
 const MAX_PAGE = 20;
 const SECONDS_WAIT_FOR_NEXT_PAGE = 5;
@@ -59,7 +58,7 @@ function productsJob(Browser) {
             yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
             try {
                 const newProducts = yield scrapeAmazonProducts(page, Browser);
-                (0, feed_1.updateProducts)(newProducts);
+                // updateProducts(newProducts);
                 console.log('----------- success products', page, newProducts.length);
                 page++;
                 retry = 0;
@@ -88,7 +87,7 @@ function offersJob(Browser) {
             yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
             try {
                 const newOffers = yield scrapeAmazonOffersList(page, Browser);
-                (0, feed_1.updateOffers)(newOffers);
+                // updateOffers(newOffers);
                 console.log('----------- success offers', page, newOffers.length);
                 page++;
                 retry = 0;
