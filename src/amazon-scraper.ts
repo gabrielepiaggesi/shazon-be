@@ -1,4 +1,4 @@
-import puppeteer, { Browser as PuppeteerBrowser } from 'puppeteer';
+import puppeteer, { Page, Browser as PuppeteerBrowser } from 'puppeteer';
 import { delay } from './utils';
 import { updateOffers, updateProducts } from './feed';
 
@@ -37,13 +37,14 @@ export async function openBrowser() {
 
 
 export async function productsJob(Browser: PuppeteerBrowser) {
+    const browserPage = await Browser.newPage();
     let page = 0;
     let retry = 0;
     while(page < MAX_PAGE) {
         await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
         try {
-            const newProducts = await scrapeAmazonProducts(page, Browser);
-            // updateProducts(newProducts);
+            const newProducts = await scrapeAmazonProducts(page, Browser, browserPage);
+            updateProducts(newProducts);
             console.log('----------- success products', page, newProducts.length);
             page++;
             retry = 0;
@@ -59,17 +60,19 @@ export async function productsJob(Browser: PuppeteerBrowser) {
             }
         }
     }
+    await browserPage.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
 }
 
 
 export async function offersJob(Browser: PuppeteerBrowser) {
+    const browserPage = await Browser.newPage();
     let page = 0;
     let retry = 0;
     while(page < MAX_PAGE) {
         await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
         try {
-            const newOffers = await scrapeAmazonOffersList(page, Browser);
-            // updateOffers(newOffers);
+            const newOffers = await scrapeAmazonOffersList(page, Browser, browserPage);
+            updateOffers(newOffers);
             console.log('----------- success offers', page, newOffers.length);
             page++;
             retry = 0;
@@ -85,12 +88,13 @@ export async function offersJob(Browser: PuppeteerBrowser) {
             }
         }
     }
+    await browserPage.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
 }
 
 
 
-export async function scrapeAmazonOffersList(viewIndex: number, Browser: PuppeteerBrowser) {
-    const page = await Browser.newPage();
+export async function scrapeAmazonOffersList(viewIndex: number, Browser: PuppeteerBrowser, page: Page) {
+    // const page = await Browser.newPage();
     let arr = [];
 
     try {
@@ -130,18 +134,14 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
     } catch (e) {
         console.log(e);
         console.log('Impossibile scraping offers', viewIndex);
-        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         throw new Error('Impossibile scraping offers ' + viewIndex);
-    } finally {
-        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
     }
 
     return arr;
 }
 
 
-export async function scrapeAmazonProducts(viewIndex: number, Browser: PuppeteerBrowser) {
-    const page = await Browser.newPage();
+export async function scrapeAmazonProducts(viewIndex: number, Browser: PuppeteerBrowser, page: Page) {
     let arr = [];
 
     try {
@@ -187,14 +187,12 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
             return result;
         });
         console.log('Success scraping products', viewIndex);
-        await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
     } catch(e) {
         console.log(e);
         console.log('Impossibile scraping products', viewIndex);
         await page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         throw new Error('Impossibile scraping products ' + viewIndex);
     }
-
     return arr;
 }
 

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrapeAmazonProducts = exports.scrapeAmazonOffersList = exports.offersJob = exports.productsJob = exports.openBrowser = exports.closeBrowser = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const utils_1 = require("./utils");
+const feed_1 = require("./feed");
 const port = process.env.PORT || 8000;
 const MAX_PAGE = 20;
 const SECONDS_WAIT_FOR_NEXT_PAGE = 5;
@@ -52,13 +53,14 @@ exports.openBrowser = openBrowser;
 // https://www.amazon.it/s?i=beauty&rh=n%3A6198082031&dc&fs=true&ds=v1%3A1beD71AYUA6N1dmmmVi%2FuoInBnET13ywZtuY7Pms%2FBw&qid=1707750899&ref=sr_ex_n_1
 function productsJob(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
+        const browserPage = yield Browser.newPage();
         let page = 0;
         let retry = 0;
         while (page < MAX_PAGE) {
             yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
             try {
-                const newProducts = yield scrapeAmazonProducts(page, Browser);
-                // updateProducts(newProducts);
+                const newProducts = yield scrapeAmazonProducts(page, Browser, browserPage);
+                (0, feed_1.updateProducts)(newProducts);
                 console.log('----------- success products', page, newProducts.length);
                 page++;
                 retry = 0;
@@ -76,18 +78,20 @@ function productsJob(Browser) {
                 }
             }
         }
+        yield browserPage.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
     });
 }
 exports.productsJob = productsJob;
 function offersJob(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
+        const browserPage = yield Browser.newPage();
         let page = 0;
         let retry = 0;
         while (page < MAX_PAGE) {
             yield (0, utils_1.delay)(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
             try {
-                const newOffers = yield scrapeAmazonOffersList(page, Browser);
-                // updateOffers(newOffers);
+                const newOffers = yield scrapeAmazonOffersList(page, Browser, browserPage);
+                (0, feed_1.updateOffers)(newOffers);
                 console.log('----------- success offers', page, newOffers.length);
                 page++;
                 retry = 0;
@@ -105,12 +109,13 @@ function offersJob(Browser) {
                 }
             }
         }
+        yield browserPage.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
     });
 }
 exports.offersJob = offersJob;
-function scrapeAmazonOffersList(viewIndex, Browser) {
+function scrapeAmazonOffersList(viewIndex, Browser, page) {
     return __awaiter(this, void 0, void 0, function* () {
-        const page = yield Browser.newPage();
+        // const page = await Browser.newPage();
         let arr = [];
         try {
             // await page.setViewport({width: 1512, height: 949});
@@ -144,19 +149,14 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping offers', viewIndex);
-            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
             throw new Error('Impossibile scraping offers ' + viewIndex);
-        }
-        finally {
-            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         }
         return arr;
     });
 }
 exports.scrapeAmazonOffersList = scrapeAmazonOffersList;
-function scrapeAmazonProducts(viewIndex, Browser) {
+function scrapeAmazonProducts(viewIndex, Browser, page) {
     return __awaiter(this, void 0, void 0, function* () {
-        const page = yield Browser.newPage();
         let arr = [];
         try {
             yield page.setViewport({ width: 1512, height: 949 });
@@ -194,7 +194,6 @@ function scrapeAmazonProducts(viewIndex, Browser) {
                 return result;
             });
             console.log('Success scraping products', viewIndex);
-            yield page.close().then(() => console.log('page closed')).catch((e) => console.error('page closing error', e));
         }
         catch (e) {
             console.log(e);
