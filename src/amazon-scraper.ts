@@ -1,8 +1,78 @@
 import puppeteer, { Browser as PuppeteerBrowser } from 'puppeteer';
-import { openBrowser } from './cron-jobs';
+import { delay } from './utils';
+import { updateOffers, updateProducts } from './feed';
 
-export let Browser!: PuppeteerBrowser;
 const port = process.env.PORT || 8000;
+const MAX_PAGE = 30;
+const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
+
+export async function closeBrowser(Browser: PuppeteerBrowser) {
+    console.log('CLOSE BROWSER');
+    await Browser.disconnect();
+    await Browser.close();
+    return Browser;
+}
+
+export async function openBrowser() {
+    const headless = !(port === 8000);
+    console.log('OPEN NEW BROWSER', headless);
+    const Browser: PuppeteerBrowser = await puppeteer.launch({
+        headless,
+        args: port === 8000 ? [] : [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            `--window-size=1512,949`,
+            "--disable-dev-shm-usage",
+            "--single-process",
+            "--no-zygote",
+        ],
+        defaultViewport: {
+            width: 1512,
+            height: 949
+        }
+    });
+    return Browser;
+}
+
+
+export async function productsJob() {
+    let Browser = await openBrowser();
+    let page = 0;
+    while(page < MAX_PAGE) {
+        await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
+        try {
+            const newProducts = await scrapeAmazonProducts(page, Browser);
+            updateProducts(page, newProducts);
+            console.log('----------- success products', page, newProducts.length);
+            // page++;
+        } catch(e) {
+            console.log('----------- error products', page);
+        }
+        page++;
+    }
+    Browser = await closeBrowser(Browser);
+}
+
+
+export async function offersJob() {
+    let Browser = await openBrowser();
+    let page = 0;
+    while(page < MAX_PAGE) {
+        await delay(SECONDS_WAIT_FOR_NEXT_PAGE * 1000);
+        try {
+            const newOffers = await scrapeAmazonOffersList(page, Browser);
+            updateOffers(page, newOffers);
+            console.log('----------- success offers', page, newOffers.length);
+            // page++;
+        } catch(e) {
+            console.log('----------- error offers', page);
+        }
+        page++;
+    }
+    Browser = await closeBrowser(Browser);
+}
+
+
 
 export async function scrapeAmazonOffersList(viewIndex: number, Browser: PuppeteerBrowser) {
     const page = await Browser.newPage();
