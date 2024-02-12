@@ -22,7 +22,6 @@ const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
 function closeBrowser(Browser) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('CLOSE BROWSER');
-        yield Browser.disconnect();
         yield Browser.close();
         return Browser;
     });

@@ -8,7 +8,6 @@ const SECONDS_WAIT_FOR_NEXT_PAGE = 30;
 
 export async function closeBrowser(Browser: PuppeteerBrowser) {
     console.log('CLOSE BROWSER');
-    await Browser.disconnect();
     await Browser.close();
     return Browser;
 }
