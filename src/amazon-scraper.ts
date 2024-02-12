@@ -45,7 +45,7 @@ export async function scrapeAmazonOffersList(viewIndex: number, Browser: Puppete
     } catch (e) {
         console.log(e);
         console.log('Impossibile scraping offers', viewIndex);
-        throw new Error('Impossibile scraping offers ' + viewIndex);
+        // throw new Error('Impossibile scraping offers ' + viewIndex);
     } finally {
         await page.close();
     }
@@ -103,7 +103,7 @@ export async function scrapeAmazonProducts(viewIndex: number, Browser: Puppeteer
     } catch(e) {
         console.log(e);
         console.log('Impossibile scraping products', viewIndex);
-        throw new Error('Impossibile scraping products ' + viewIndex);
+        // throw new Error('Impossibile scraping products ' + viewIndex);
     } finally {
         await page.close();
     }

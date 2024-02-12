@@ -47,7 +47,7 @@ function scrapeAmazonOffersList(viewIndex, Browser) {
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping offers', viewIndex);
-            throw new Error('Impossibile scraping offers ' + viewIndex);
+            // throw new Error('Impossibile scraping offers ' + viewIndex);
         }
         finally {
             yield page.close();
@@ -99,7 +99,7 @@ function scrapeAmazonProducts(viewIndex, Browser) {
         catch (e) {
             console.log(e);
             console.log('Impossibile scraping products', viewIndex);
-            throw new Error('Impossibile scraping products ' + viewIndex);
+            // throw new Error('Impossibile scraping products ' + viewIndex);
         }
         finally {
             yield page.close();
