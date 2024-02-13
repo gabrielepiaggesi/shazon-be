@@ -16,6 +16,7 @@
     "cron": "^3.1.6",
     "express": "^4.17.1",
     "nodemon": "^3.0.3",
+    "ps-node": "^0.1.6",
     "puppeteer": "^21.10.0"
   },
   "devDependencies": {

@@ -15,13 +15,15 @@ exports.products = {};
 function updateProducts(elements) {
     const pages = Object.keys(exports.products);
     const lastPage = pages.length ? +pages[pages.length - 1] : -1;
-    exports.products[(lastPage + 1)] = elements;
+    if (elements.length)
+        exports.products[(lastPage + 1)] = elements;
 }
 exports.updateProducts = updateProducts;
 function updateOffers(elements) {
     const pages = Object.keys(exports.offers);
     const lastPage = pages.length ? +pages[pages.length - 1] : -1;
-    exports.offers[(lastPage + 1)] = elements;
+    if (elements.length)
+        exports.offers[(lastPage + 1)] = elements;
 }
 exports.updateOffers = updateOffers;
 function getProducts(page) {

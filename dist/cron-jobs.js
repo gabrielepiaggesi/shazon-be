@@ -51,10 +51,13 @@ exports.initJobs = initJobs;
 function startScraping() {
     return __awaiter(this, void 0, void 0, function* () {
         let browser = yield (0, amazon_scraper_1.openBrowser)();
+        const browserPID = yield browser.process().pid;
         yield (0, amazon_scraper_1.offersJob)(browser);
         yield (0, utils_1.delay)(5 * 1000);
         yield (0, amazon_scraper_1.productsJob)(browser);
         browser = yield (0, amazon_scraper_1.closeBrowser)(browser);
+        yield (0, utils_1.checkProcess)(browserPID);
+        yield (0, utils_1.checkProcess)(browserPID + 1);
     });
 }
 exports.startScraping = startScraping;

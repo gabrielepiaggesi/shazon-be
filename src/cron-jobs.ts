@@ -1,6 +1,6 @@
 import * as Cron from 'cron';
 import { closeBrowser, offersJob, openBrowser, productsJob } from './amazon-scraper';
-import { delay } from './utils';
+import { checkProcess, delay } from './utils';
 const CronJob = Cron.CronJob;
 
 export const initJobs = async (app) => {
@@ -17,8 +17,11 @@ export const initJobs = async (app) => {
 
 export async function startScraping() {
     let browser = await openBrowser();
+    const browserPID = await browser.process().pid;
     await offersJob(browser);
     await delay(5 * 1000);
     await productsJob(browser);
     browser = await closeBrowser(browser);
+    await checkProcess(browserPID);
+    await checkProcess(browserPID+1);
 }

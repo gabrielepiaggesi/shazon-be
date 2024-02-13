@@ -4,13 +4,13 @@ export let products = {};
 export function updateProducts(elements) {
     const pages = Object.keys(products);
     const lastPage = pages.length ? +pages[pages.length - 1] : -1;
-    products[(lastPage+1)] = elements;
+    if (elements.length) products[(lastPage+1)] = elements;
 }
 
 export function updateOffers(elements) {
     const pages = Object.keys(offers);
     const lastPage = pages.length ? +pages[pages.length - 1] : -1;
-    offers[(lastPage+1)] = elements;
+    if (elements.length) offers[(lastPage+1)] = elements;
 }
 
 export async function getProducts(page: number) {
